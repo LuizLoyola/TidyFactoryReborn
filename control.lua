@@ -1,5 +1,17 @@
 function is_target(candidate)
-  return candidate.electric_output_flow_limit ~= nil -- FIXME: Check whether it is not tf-pole
+  if candidate == nil then
+    return false;
+  end
+  game.print ('candidate: '.. candidate.name)
+
+  for _,v in global.destroyed_reg_nums do
+    if v == candidate.registration_number then
+      game.print ('candidate is registered')
+      global.destroyed_reg_nums.remove(v)
+      return true
+    end
+  end
+
 end
 
 function target_entities(surface) 
@@ -82,6 +94,12 @@ function spam_poles (entity)
   if not is_placed then
     entity.surface.create_entity{name = 'tf-pole', position = entity.position, force = entity.force}
   end
+  game.print ('register '..entity.name)
+  local reg_number = entitscript.register_on_entity_destroyed(entity)
+  if global.destroyed_reg_nums == nil then
+    global.destroyed_reg_nums = {}
+  end
+  global.destroyed_reg_nums[table.getn(global.destroyed_reg_nums) + 1] = reg_number
 end
 
 function onBuildHandler(entity) 
@@ -98,21 +116,29 @@ script.on_event(defines.events.on_robot_pre_mined, function(event)
   onMinedHandler(event.entity) 
 end)
 
+script.on_event(defines.events.on_entity_destroyed, function(event)
+  for k,v in pairs(event) do
+    game.print('destroyed: '..k..": ".. event[k] or v)
+  end
+
+  onMinedHandler(event.entity) 
+end)
+
 function onMinedHandler(entity) 
   if is_target(entity) then
     local surface = entity.surface
     local position = entity.position
-    -- game.print ('position: '.. serpent.line (position))
+    game.print ('position: '.. serpent.line (position))
     local pole_entity = surface.find_entity('tf-pole', position)
     if pole_entity then 
-      -- game.print ('b position: '.. serpent.line (pole_entity.position))
+      game.print ('b position: '.. serpent.line (pole_entity.position))
       pole_entity.destroy()
     else
       local pole_entities = surface.find_entities_filtered({name = 'tf-pole', area = entity.bounding_box})
       if pole_entities then
-        -- game.print ('amount: '.. (#pole_entities))
+        game.print ('amount: '.. (#pole_entities))
         for i, pole in pairs (pole_entities) do
-          -- game.print ('c position: '.. serpent.line (pole.position))
+          game.print ('c position: '.. serpent.line (pole.position))
           pole.destroy()
         end
       end
