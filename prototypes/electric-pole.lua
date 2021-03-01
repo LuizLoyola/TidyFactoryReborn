@@ -21,7 +21,6 @@ data:extend(
     drawing_box = {{-0.5, -2.6}, {0.5, 0.5}},
     maximum_wire_distance = 2,
     supply_area_distance = 2,
-    destructible = false,
     pictures =
     {
       filename = "__base__/graphics/entity/small-electric-pole/small-electric-pole.png",
