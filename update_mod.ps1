@@ -10,4 +10,4 @@ Stop-Process -Name "Factorio"
 $modFileOnFolder = "$($env:APPDATA)/Factorio/mods/$($zipFile)"
 Remove-Item $modFileOnFolder
 Copy-Item $zipFile $modFileOnFolder
-
+explorer "steam://rungameid/427520"
