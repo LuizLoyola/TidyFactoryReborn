@@ -1,5 +1,5 @@
 function is_target(candidate)
-  return candidate.electric_output_flow_limit ~= nil -- FIXME: Check whether it is not tf-pole
+  return candidate ~= nil and candidate.electric_output_flow_limit ~= nil and candidate.name ~= 'tf-pole'
 end
 
 function target_entities(surface) 
