@@ -1,17 +1,19 @@
-function is_target(candidate)
-  if candidate == nil then
-    return false;
-  end
-  game.print ('candidate: '.. candidate.name)
+function should_add_poles(candidate)
+  return candidate ~= nil and candidate.electric_output_flow_limit ~= nil and candidate.name ~= 'tf-pole'
+end
 
-  for _,v in global.destroyed_reg_nums do
-    if v == candidate.registration_number then
-      game.print ('candidate is registered')
-      global.destroyed_reg_nums.remove(v)
+function is_registered(entity)
+  if global.destroyed_reg_nums == nil then
+    return false
+  end
+
+  for _, v in global.destroyed_reg_nums do
+    if v == entity.registration_number then
       return true
     end
   end
-
+  
+  return false
 end
 
 function target_entities(surface) 
